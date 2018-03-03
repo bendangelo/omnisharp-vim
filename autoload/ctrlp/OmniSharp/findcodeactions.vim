@@ -5,6 +5,10 @@
 "endif
 "let g:loaded_ctrlp_findsymbols = 1
 
+if !(has('python') || has('python3'))
+  finish
+endif
+
 
 " Add this extension's settings to g:ctrlp_ext_vars
 "
@@ -72,7 +76,7 @@ endfunction
 function! ctrlp#OmniSharp#findcodeactions#accept(mode, str) abort
   call ctrlp#exit()
   let action = index(s:actions, a:str)
-  call pyeval(printf('runCodeAction(%s, %d)', string(s:mode), action))
+  call OmniSharp#py#eval('runCodeAction(%s, %d)', string(s:mode), action)
 endfunction
 
 " Give the extension an ID

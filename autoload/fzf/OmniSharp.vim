@@ -1,4 +1,4 @@
-if !has('python')
+if !(has('python') || has('python3'))
   finish
 endif
 
@@ -19,7 +19,7 @@ function! fzf#OmniSharp#findtypes() abort
   if !OmniSharp#ServerIsRunning()
     return
   endif
-  let s:quickfixes = pyeval('findTypes()')
+  let s:quickfixes = OmniSharp#py#eval('findTypes()')
   let types = []
   for quickfix in s:quickfixes
     call add(types, quickfix.text)
@@ -34,7 +34,7 @@ function! fzf#OmniSharp#findsymbols() abort
   if !OmniSharp#ServerIsRunning()
     return
   endif
-  let s:quickfixes = pyeval('findSymbols()')
+  let s:quickfixes = OmniSharp#py#eval('findSymbols()')
   let symbols = []
   for quickfix in s:quickfixes
     call add(symbols, quickfix.text)
@@ -47,11 +47,11 @@ endfunction
 
 function! s:action_sink(str) abort
   let action = index(s:actions, a:str)
-  call pyeval(printf('runCodeAction(%s, %d)', string(s:mode), action))
+  call OmniSharp#py#eval(printf('runCodeAction(%s, %d)', string(s:mode), action))
 endfunction
 
 function! fzf#OmniSharp#getcodeactions(mode) abort
-  let s:actions = pyeval(printf('getCodeActions(%s)', string(a:mode)))
+  let s:actions = OmniSharp#py#eval(printf('getCodeActions(%s)', string(a:mode)))
   let s:mode = a:mode
   if empty(s:actions)
     echo 'No code actions found'

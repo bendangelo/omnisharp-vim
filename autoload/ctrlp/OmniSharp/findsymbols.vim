@@ -6,6 +6,9 @@ if ( exists('g:OmniSharp_loaded_ctrlp_findsymbols') && g:OmniSharp_loaded_ctrlp_
 endif
 let g:loaded_ctrlp_OmniSharp_findsymbols = 1
 
+if !(has('python') || has('python3'))
+  finish
+endif
 
 " Add this extension's settings to g:ctrlp_ext_vars
 "
@@ -56,7 +59,7 @@ function! ctrlp#OmniSharp#findsymbols#init() abort
     return
   endif
 
-  let s:quickfixes = pyeval('findSymbols()')
+  let s:quickfixes = OmniSharp#py#eval('findSymbols()')
   let symbols = []
   for quickfix in s:quickfixes
     call add(symbols, quickfix.text)
